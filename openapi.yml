@@ -1,18 +1,46 @@
-# バージョン
-openapi: 3.0.3
-
-# APIのメタデータ
+openapi: '3.0.0'
 info:
-  title: '社員管理API'
-  description: '社員を管理するAPI'
-  version: 0.1.0
-
-# APIを提供するサーバーの情報
+  title: 社員API
+  version: '0.1.0'
+  description: 従業員をCRUDで登録したり更新したりできるAPI
 servers:
-  - url: 'http://localhost:3030'
-
-# APIで利用可能なエンドポイントなど
+  - url: http://localhost:3030
+    description: Dockerで構築したGoのサーバー
 paths:
-
-# APIで使うオブジェクトスキーマ
+  /employee:
+    post:
+      tags:
+        - employee
+      summary: 社員を新規登録する
+      description: 社員を新規登録できる
+      parameters: []
+      requestBody:
+        description: 社員を作成するため
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Employee'
+            example:
+              id: 11
+              full_name: 'John Doe'
+      responses:
+        '201':
+          description: CREATED
 components:
+  schemas:
+    Employee:
+      type: object
+      required:
+        - id
+          full_name
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 22
+        full_name:
+          type: string
+          example: '砂川朝恭'
+tags:
+  - name: employees
+    description: 社員リソースにアクセスする

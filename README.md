@@ -6,7 +6,3 @@
 docker-compose build --no-cache
 docker-compose up -d
 ```
-
-# ダミー
-
-masterブランチを作成するためのダミーの変更。

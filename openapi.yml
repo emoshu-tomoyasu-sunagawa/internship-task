@@ -1,0 +1,18 @@
+# バージョン
+openapi: 3.0.3
+
+# APIのメタデータ
+info:
+  title: '社員管理API'
+  description: '社員を管理するAPI'
+  version: 0.1.0
+
+# APIを提供するサーバーの情報
+servers:
+  - url: 'http://localhost:3030'
+
+# APIで利用可能なエンドポイントなど
+paths:
+
+# APIで使うオブジェクトスキーマ
+components:

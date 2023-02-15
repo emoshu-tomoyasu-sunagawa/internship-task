@@ -38,7 +38,7 @@ paths:
 components:
   schemas:
     Employee:
-      title: 社員
+      title: 社員情報
       type: object
       properties:
         no:

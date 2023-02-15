@@ -2,6 +2,8 @@
 
 INSERT INTO roles (
     role
-) VALUES (
-    '社長', '部長', '社員'
-);
+) VALUES
+    ('社長'),
+    ('部長'),
+    ('社員')
+;

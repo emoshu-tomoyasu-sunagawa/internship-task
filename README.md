@@ -23,4 +23,5 @@ use emonavi_db;
 source ./sql/roles.sql;
 source ./sql/departments.sql;
 source ./sql/status.sql;
+source ./sql/employment_status.sql;
 ```

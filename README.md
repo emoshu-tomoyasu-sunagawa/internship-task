@@ -20,5 +20,7 @@ docker cp ./sql internship-task-db-1:/
 docker-compose exec db bash
 mysql -u root -ppassword
 use emonavi_db;
-source ./sql;
+source ./sql/roles.sql;
+source ./sql/departments.sql;
+source ./sql/status.sql;
 ```

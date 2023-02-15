@@ -16,31 +16,62 @@ paths:
       parameters: []
       requestBody:
         description: 社員を作成するため
+        required: true
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/Employee'
             example:
-              id: 11
-              full_name: 'John Doe'
+              no: 11
+              profile_img: https://emoshu.co.jp/files/blog/5/blog_posts/2023/02/00000016_eye_catch__thumb.jpg
+              full_name: John Doe
+              kana_name: ジョン ドウ
+              motto: 頑張るぞい！
+              biography: Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+              start_date: 2020-09-17 14:35:23
+              end_date: 2020-09-17 15:35:12
+              employment_status: 2
+              status: 2
       responses:
-        '201':
+        201:
           description: CREATED
 components:
   schemas:
     Employee:
+      title: 社員
       type: object
-      required:
-        - id
-          full_name
       properties:
-        id:
-          type: integer
-          format: int64
-          example: 22
+        no:
+          type: string
+          example: 21
+        profile_img:
+          type: string
+          example: https://emoshu.co.jp/theme/emoshu/img/EMoshU_logo_m.png
         full_name:
           type: string
-          example: '砂川朝恭'
-tags:
-  - name: employees
-    description: 社員リソースにアクセスする
+          example: 砂川朝恭
+        kana_name:
+          type: string
+          example: スナガワトモヤス
+        motto:
+          type: string
+          example: ここにモットーを書くよ
+        biography:
+          type: string
+          example: ここには自己紹介文を書くよ！ここには自己紹介文を書くよ！ここには自己紹介文を書くよ！ここには自己紹介文を書くよ！
+        start_date:
+          type: string
+          example: '2020-12-12 12:45:12'
+        end_date:
+          type: string
+          example: '2021-01-12 16:45:12'
+        employment_status:
+          type: integer
+          example: 1
+        status:
+          type: integer
+          example: 2
+      required:
+        - no
+          profile_img
+          full_name

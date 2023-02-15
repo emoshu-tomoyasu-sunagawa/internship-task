@@ -15,7 +15,7 @@ paths:
       description: 社員を新規登録できる
       parameters: []
       requestBody:
-        description: 社員を作成するため
+        description: 新規社員の初期データ
         required: true
         content:
           application/json:
@@ -33,7 +33,7 @@ paths:
               employment_status: 2
               status: 2
       responses:
-        201:
+        '201':
           description: CREATED
 components:
   schemas:
@@ -73,5 +73,5 @@ components:
           example: 2
       required:
         - no
-          profile_img
-          full_name
+        - profile_img
+        - full_name

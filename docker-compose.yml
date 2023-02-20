@@ -9,9 +9,12 @@ services:
     depends_on:
       - db
     command: ["./start.sh"]
+    networks:
+      - app-net
   db:
     image: mysql:8.0.21
     platform: linux/amd64
+    container_name: dbcontainer
     ports:
       - '3306:3306'
     volumes:
@@ -22,6 +25,8 @@ services:
       MYSQL_PASSWORD: 'password'
       MYSQL_ROOT_PASSWORD: 'password'
       TZ: 'Asia/Tokyo'
+    networks:
+      - app-net
   phpmyadmin:
     image: phpmyadmin
     restart: always
@@ -29,5 +34,9 @@ services:
       - 8080:80
     environment:
       - PMA_ARBITRARY=1
+    networks:
+      - app-net
 volumes:
   go_mysql_data:
+networks:
+  app-net:

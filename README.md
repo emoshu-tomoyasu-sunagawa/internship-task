@@ -10,18 +10,3 @@
 docker-compose build --no-cache
 docker-compose up -d
 ```
-
-## マスターテーブルのレコード編
-
-マスターテーブルについて、下記のコマンドを実行して初期データを与えます。
-
-```
-docker cp ./sql internship-task-db-1:/
-docker-compose exec db bash
-mysql -u root -ppassword
-use emonavi_db;
-source ./sql/roles.sql;
-source ./sql/departments.sql;
-source ./sql/status.sql;
-source ./sql/employment_status.sql;
-```

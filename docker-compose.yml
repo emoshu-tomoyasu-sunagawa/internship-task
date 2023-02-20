@@ -24,6 +24,7 @@ services:
       MYSQL_USER: 'user'
       MYSQL_PASSWORD: 'password'
       MYSQL_ROOT_PASSWORD: 'password'
+      MYSQL_DATABASE: 'emonavi_db'
       TZ: 'Asia/Tokyo'
     networks:
       - app-net

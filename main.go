@@ -48,11 +48,30 @@ func hello(c echo.Context) error {
 
 func createMember(c echo.Context) error {
 	db := DBConnection()
+
 	no := c.FormValue("no")
 	profile_img := c.FormValue("profile_img")
 	full_name := c.FormValue("full_name")
+	kana_name := c.FormValue("kana_name")
+	motto := c.FormValue("motto")
+	biography := c.FormValue("biography")
+	start_date := c.FormValue("start_date")
+	end_date := c.FormValue("end_date")
+	employment_status := c.FormValue("employment_status")
+	status := c.FormValue("status")
 
-	var member = Member{No: no, ProfileImg: profile_img, FullName: full_name}
+	var member = Member{
+		No:               no,
+		ProfileImg:       profile_img,
+		FullName:         full_name,
+		KanaName:         kana_name,
+		Motto:            motto,
+		Biography:        biography,
+		StartDate:        start_date,
+		EndDate:          end_date,
+		EmploymentStatus: employment_status,
+		Status:           status,
+	}
 	db.Create(&member)
 
 	return c.String(http.StatusOK, full_name)

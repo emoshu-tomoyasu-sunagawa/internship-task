@@ -1,6 +1,7 @@
 package main
 
 import (
+	"database/sql"
 	"net/http"
 
 	"gorm.io/driver/mysql"
@@ -10,18 +11,18 @@ import (
 )
 
 type Member struct {
-	gorm.Model
-	Id               int    `json:"id"`
-	No               string `json:"no"`
-	ProfileImg       string `json:"profile_img"`
-	FullName         string `json:"full_name"`
-	KanaName         string `json:"kana_name"`
-	Motto            string `json:"motto"`
-	Biography        string `json:"biography"`
-	StartDate        string `json:"start_date"`
-	EndDate          string `json:"end_date"`
-	EmploymentStatus string `json:"employment_status"`
-	Status           string `json:"status"`
+	// gorm.Model
+	Id               int            `json:"id"`
+	No               sql.NullString `json:"no"`
+	ProfileImg       string         `json:"profile_img"`
+	FullName         string         `json:"full_name"`
+	KanaName         sql.NullString `json:"kana_name"`
+	Motto            sql.NullString `json:"motto"`
+	Biography        sql.NullString `json:"biography"`
+	StartDate        sql.NullTime   `json:"start_date"`
+	EndDate          sql.NullTime   `json:"end_date"`
+	EmploymentStatus sql.NullInt16  `json:"employment_status"`
+	Status           sql.NullInt16  `json:"status"`
 }
 
 type Members struct {

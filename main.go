@@ -1,8 +1,9 @@
 package main
 
 import (
-	"database/sql"
 	"net/http"
+	"strconv"
+	"time"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -12,17 +13,17 @@ import (
 
 type Member struct {
 	// gorm.Model
-	Id               int            `json:"id"`
-	No               sql.NullString `json:"no"`
-	ProfileImg       string         `json:"profile_img"`
-	FullName         string         `json:"full_name"`
-	KanaName         sql.NullString `json:"kana_name"`
-	Motto            sql.NullString `json:"motto"`
-	Biography        sql.NullString `json:"biography"`
-	StartDate        sql.NullTime   `json:"start_date"`
-	EndDate          sql.NullTime   `json:"end_date"`
-	EmploymentStatus sql.NullInt16  `json:"employment_status"`
-	Status           sql.NullInt16  `json:"status"`
+	Id               int       `json:"id"`
+	No               string    `json:"no"`
+	ProfileImg       string    `json:"profile_img"`
+	FullName         string    `json:"full_name"`
+	KanaName         string    `json:"kana_name"`
+	Motto            string    `json:"motto"`
+	Biography        string    `json:"biography"`
+	StartDate        time.Time `json:"start_date"`
+	EndDate          time.Time `json:"end_date"`
+	EmploymentStatus int       `json:"employment_status"`
+	Status           int       `json:"status"`
 }
 
 type Members struct {
@@ -33,16 +34,12 @@ func main() {
 	e := echo.New()
 
 	e.GET("/", hello)
-	e.POST("/member", createMember)
+	e.POST("/member", createMember) // ユーザーの新規登録
 
 	e.Start(":3000")
 }
 
 func hello(c echo.Context) error {
-	db := DBConnection()
-	var member = Member{No: "020", ProfileImg: "https://emoshu.co.jp", FullName: "John Doe"}
-	db.Create(&member)
-
 	return c.String(http.StatusOK, "新しい従業員を追加しました！")
 }
 
@@ -55,10 +52,10 @@ func createMember(c echo.Context) error {
 	kana_name := c.FormValue("kana_name")
 	motto := c.FormValue("motto")
 	biography := c.FormValue("biography")
-	start_date := c.FormValue("start_date")
-	end_date := c.FormValue("end_date")
-	employment_status := c.FormValue("employment_status")
-	status := c.FormValue("status")
+	start_date, _ := time.Parse("2006-01-02 15:04:05", c.FormValue("start_date"))
+	end_date, _ := time.Parse("2006-01-02 15:04:05", c.FormValue("end_date"))
+	employment_status, _ := strconv.Atoi(c.FormValue("employment_status"))
+	status, _ := strconv.Atoi(c.FormValue("status"))
 
 	var member = Member{
 		No:               no,

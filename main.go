@@ -29,10 +29,11 @@ type Member struct {
 func main() {
 	e := echo.New()
 
-	e.POST("/member", createMember)     // 社員の新規登録
-	e.GET("/members", getAllMembers)    // 社員の一覧取得
-	e.GET("/members/:id", getMember)    // 社員の詳細情報取得
-	e.PUT("/members/:id", updateMember) // 社員の情報を更新する
+	e.POST("/member", createMember)        // 社員の新規登録
+	e.GET("/members", getAllMembers)       // 社員の一覧取得
+	e.GET("/members/:id", getMember)       // 社員の詳細情報取得
+	e.PUT("/members/:id", updateMember)    // 社員の情報を更新する
+	e.DELETE("/members/:id", deleteMember) // 社員情報を削除する
 	e.Start(":3000")
 }
 
@@ -87,6 +88,15 @@ func updateMember(c echo.Context) error {
 
 	db.Save(&member)
 	return c.JSON(http.StatusOK, member)
+}
+
+// 社員情報を削除する
+func deleteMember(c echo.Context) error {
+	id := c.Param("id")
+	db := DBConnection()
+	db.Delete(&Member{}, id)
+
+	return c.JSON(http.StatusOK, id)
 }
 
 func DBConnection() *gorm.DB {

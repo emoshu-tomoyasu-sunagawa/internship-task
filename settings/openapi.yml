@@ -60,6 +60,40 @@ paths:
                     motto: やーーー！
                     start_date: 2021-10-07 16:13:21
                     employment_status: 2
+  /members/{id}:
+    get:
+      tags:
+        - member
+      summary: 社員の詳細情報を取得する
+      description: 指定したID番号の社員の詳細情報を取得します
+      parameters:
+        - name: id
+          in: path
+          description: 社員のID番号
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: "Success"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Member'
+        404:
+          description: "Not Found"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  status:
+                    type: "string"
+                    example: "NOT_FOUND"
+                  message:
+                    type: "string"
+                    example: "NOT_FOUND"
+                  
 components:
   schemas:
     Member:

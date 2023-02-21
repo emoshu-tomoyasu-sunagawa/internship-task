@@ -12,7 +12,6 @@ import (
 )
 
 type Member struct {
-	// gorm.Model
 	Id               int     `json:"id"`
 	No               *string `json:"no"`
 	ProfileImg       string  `json:"profile_img"`

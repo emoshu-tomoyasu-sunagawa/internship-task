@@ -91,11 +91,14 @@ func updateMember(c echo.Context) error {
 
 // 社員情報を削除する
 func deleteMember(c echo.Context) error {
+	var member Member
 	id := c.Param("id")
 	db := DBConnection()
+	db.First(&member, id)
+
 	db.Delete(&Member{}, id)
 
-	return c.JSON(http.StatusOK, id)
+	return c.JSON(http.StatusOK, member.Id)
 }
 
 func DBConnection() *gorm.DB {

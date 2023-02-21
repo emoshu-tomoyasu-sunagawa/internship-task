@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 	"os"
 
@@ -29,9 +30,10 @@ type Member struct {
 func main() {
 	e := echo.New()
 
-	e.POST("/member", createMember)  // 社員の新規登録
-	e.GET("/members", getAllMembers) // 社員の一覧取得
-	e.GET("/members/:id", getMember) // 社員の詳細情報取得
+	e.POST("/member", createMember)     // 社員の新規登録
+	e.GET("/members", getAllMembers)    // 社員の一覧取得
+	e.GET("/members/:id", getMember)    // 社員の詳細情報取得
+	e.PUT("/members/:id", updateMember) // 社員の情報を更新する
 	e.Start(":3000")
 }
 
@@ -65,6 +67,27 @@ func getMember(c echo.Context) error {
 	db := DBConnection()
 	db.First(&member, id)
 
+	return c.JSON(http.StatusOK, member)
+}
+
+// 社員の情報を更新する
+func updateMember(c echo.Context) error {
+	var member Member
+	id := c.Param("id")
+	db := DBConnection()
+	db.First(&member, id)
+	fmt.Println(member)
+
+	// ID番号に応じたユーザーがDBから取得できているかの確認
+	if member.Id == 0 {
+		return c.JSON(http.StatusBadRequest, "There is NO user!")
+	}
+
+	if err := c.Bind(&member); err != nil {
+		return err
+	}
+
+	db.Save(&member)
 	return c.JSON(http.StatusOK, member)
 }
 

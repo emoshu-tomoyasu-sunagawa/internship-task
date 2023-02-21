@@ -26,16 +26,17 @@ type Member struct {
 	Status           *int    `json:"status"`
 }
 
-type Members struct {
-	Members []Member `json:"member"`
-}
+// type Members struct {
+// 	Members []Member `json:"members"`
+// }
 
 func main() {
 	e := echo.New()
 
 	e.GET("/", hello)
-	e.POST("/member", createMember) // ユーザーの新規登録
+	e.POST("/member", createMember) // 社員の新規登録
 
+	e.GET("/members", getAllMembers) // 社員の一覧取得
 	e.Start(":3000")
 }
 
@@ -43,6 +44,7 @@ func hello(c echo.Context) error {
 	return c.String(http.StatusOK, "新しい従業員を追加しました！")
 }
 
+// 社員の新規登録
 func createMember(c echo.Context) error {
 	var member Member
 	err := c.Bind(&member)
@@ -54,6 +56,15 @@ func createMember(c echo.Context) error {
 	db.Create(&member)
 
 	return c.String(http.StatusOK, member.FullName+"さんの社員情報を登録しました")
+}
+
+// 社員の一覧取得
+func getAllMembers(c echo.Context) error {
+	var members []Member
+	db := DBConnection()
+	db.Find(&members)
+
+	return c.JSON(http.StatusOK, members)
 }
 
 func DBConnection() *gorm.DB {

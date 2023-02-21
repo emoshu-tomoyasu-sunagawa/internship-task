@@ -1,0 +1,105 @@
+openapi: '3.0.0'
+info:
+  title: 社員API
+  version: '0.1.0'
+  description: 従業員をCRUDで登録したり更新したりできるAPI
+servers:
+  - url: http://localhost:3030
+    description: Dockerで構築したGoのサーバー
+paths:
+  /member:
+    post:
+      tags:
+        - member
+      summary: 社員を新規登録する
+      description: 社員を新規登録できる
+      parameters: []
+      requestBody:
+        description: 新規社員の初期データ
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Member'
+            example:
+              no: '011'
+              profile_img: https://emoshu.co.jp/files/blog/5/blog_posts/2023/02/00000016_eye_catch__thumb.jpg
+              full_name: John Doe
+              kana_name: ジョン ドウ
+              motto: 頑張るぞい！
+              biography: Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+              start_date: 2020-09-17 14:35:23
+              end_date: 2020-09-17 15:35:12
+              employment_status: 2
+              status: 2
+      responses:
+        '201':
+          description: CREATED
+  /members:
+    get:
+      tags:
+        - member
+      summary: 社員の一覧を取得する
+      responses:
+        '200':
+          description: FETCHED
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Member'
+                example:
+                  - id: 1
+                    profile_img: https://emoshu.co.jp
+                    full_name: Tomoyasu Sunagawa
+                  - id: 2
+                    no: '022'
+                    profile_img: htts://google.com
+                    full_name: John Doe
+                    motto: やーーー！
+                    start_date: 2021-10-07 16:13:21
+                    employment_status: 2
+components:
+  schemas:
+    Member:
+      title: 社員情報
+      type: object
+      properties:
+        no:
+          type: string
+          example: '021'
+        profile_img:
+          type: string
+          example: https://emoshu.co.jp/theme/emoshu/img/EMoshU_logo_m.png
+        full_name:
+          type: string
+          example: 砂川朝恭
+        kana_name:
+          type: string
+          example: スナガワトモヤス
+        motto:
+          type: string
+          example: ここにモットーを書くよ
+        biography:
+          type: string
+          example: ここには自己紹介文を書くよ！ここには自己紹介文を書くよ！ここには自己紹介文を書くよ！ここには自己紹介文を書くよ！
+        start_date:
+          type: string
+          example: '2020-12-12 12:45:12'
+        end_date:
+          type: string
+          example: '2021-01-12 16:45:12'
+        employment_status:
+          type: integer
+          example: 1
+        status:
+          type: integer
+          example: 2
+      required:
+        - no
+        - profile_img
+        - full_name
+tags:
+  - name: member
+    description: 社員情報にアクセスする

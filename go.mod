@@ -3,6 +3,7 @@ module internship-task
 go 1.20
 
 require (
+	github.com/joho/godotenv v1.5.1
 	github.com/labstack/echo/v4 v4.10.0
 	gorm.io/driver/mysql v1.4.7
 	gorm.io/gorm v1.24.5

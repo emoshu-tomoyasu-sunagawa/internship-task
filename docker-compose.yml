@@ -14,17 +14,17 @@ services:
   db:
     image: mysql:8.0.21
     platform: linux/amd64
-    container_name: dbcontainer
+    container_name: ${CONTAINER_NAME}
     ports:
       - '3306:3306'
     volumes:
       - go_mysql_data:/var/lib/mysql
       - ./docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
     environment:
-      MYSQL_USER: 'user'
-      MYSQL_PASSWORD: 'password'
-      MYSQL_ROOT_PASSWORD: 'password'
-      MYSQL_DATABASE: 'emonavi_db'
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
       TZ: 'Asia/Tokyo'
     networks:
       - app-net

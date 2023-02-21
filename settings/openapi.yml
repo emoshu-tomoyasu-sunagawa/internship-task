@@ -67,12 +67,7 @@ paths:
       summary: 社員の詳細情報を取得する
       description: 指定したID番号の社員の詳細情報を取得します
       parameters:
-        - name: id
-          in: path
-          description: 社員のID番号
-          required: true
-          schema:
-            type: integer
+        - $ref: '#/components/parameters/MemberID'
       responses:
         200:
           description: "Success"
@@ -99,12 +94,7 @@ paths:
       summary: 社員の情報を更新
       description: フォームの情報を元に、社員の情報を更新します
       parameters:
-        - name: id
-          in: path
-          description: 社員のID番号
-          required: true
-          schema:
-            type: integer
+        - $ref: '#/components/parameters/MemberID'
       requestBody:
         description: 新規社員の初期データ
         required: true
@@ -143,7 +133,51 @@ paths:
                   message:
                     type: "string"
                     example: "Failed Updating"
+    delete:
+      tags:
+        - member
+      summary: 社員の削除
+      description: 社員情報を削除します
+      parameters:
+        - $ref: '#/components/parameters/MemberID'
+      responses:
+        200:
+          description: 削除された社員のID番号
+          content:
+            application/json:
+              schema:
+                type: object
+                description: 削除された社員のID番号
+                properties:
+                  id:
+                    type: integer
+                    description: 社員のID
+                    example: 1
+        404:
+          description: 削除に失敗した
+          content:
+            application/json:
+              schema:
+                type: object
+                description: 指定したID番号が存在しない
+                properties:
+                  id:
+                    type: integer
+                    description: 社員のID
+                    example: 0
+                  message:
+                    type: string
+                    description: 説明
+                    example: "Failed to delete member"
 components:
+  parameters:
+    MemberID:
+      name: id
+      in: path
+      description: 社員のID番号
+      required: true
+      schema:
+        type: integer
   schemas:
     Member:
       title: 社員情報

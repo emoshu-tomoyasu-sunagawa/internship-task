@@ -26,22 +26,13 @@ type Member struct {
 	Status           *int    `json:"status"`
 }
 
-// type Members struct {
-// 	Members []Member `json:"members"`
-// }
-
 func main() {
 	e := echo.New()
 
-	e.GET("/", hello)
 	e.POST("/member", createMember) // 社員の新規登録
 
 	e.GET("/members", getAllMembers) // 社員の一覧取得
 	e.Start(":3000")
-}
-
-func hello(c echo.Context) error {
-	return c.String(http.StatusOK, "新しい従業員を追加しました！")
 }
 
 // 社員の新規登録

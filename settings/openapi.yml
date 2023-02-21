@@ -35,6 +35,31 @@ paths:
       responses:
         '201':
           description: CREATED
+  /members:
+    get:
+      tags:
+        - member
+      summary: 社員の一覧を取得する
+      responses:
+        '200':
+          description: FETCHED
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Member'
+                example:
+                  - id: 1
+                    profile_img: https://emoshu.co.jp
+                    full_name: Tomoyasu Sunagawa
+                  - id: 2
+                    no: '022'
+                    profile_img: htts://google.com
+                    full_name: John Doe
+                    motto: やーーー！
+                    start_date: 2021-10-07 16:13:21
+                    employment_status: 2
 components:
   schemas:
     Member:
@@ -75,3 +100,6 @@ components:
         - no
         - profile_img
         - full_name
+tags:
+  - name: member
+    description: 社員情報にアクセスする

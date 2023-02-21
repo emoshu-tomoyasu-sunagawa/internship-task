@@ -29,9 +29,9 @@ type Member struct {
 func main() {
 	e := echo.New()
 
-	e.POST("/member", createMember) // 社員の新規登録
-
+	e.POST("/member", createMember)  // 社員の新規登録
 	e.GET("/members", getAllMembers) // 社員の一覧取得
+	e.GET("/members/:id", getMember) // 社員の詳細情報取得
 	e.Start(":3000")
 }
 
@@ -56,6 +56,16 @@ func getAllMembers(c echo.Context) error {
 	db.Find(&members)
 
 	return c.JSON(http.StatusOK, members)
+}
+
+// 社員の詳細情報取得
+func getMember(c echo.Context) error {
+	var member Member
+	id := c.Param("id")
+	db := DBConnection()
+	db.First(&member, id)
+
+	return c.JSON(http.StatusOK, member)
 }
 
 func DBConnection() *gorm.DB {

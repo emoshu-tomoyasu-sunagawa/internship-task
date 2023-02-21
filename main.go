@@ -3,7 +3,6 @@ package main
 import (
 	"net/http"
 	"os"
-	"strconv"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -15,16 +14,16 @@ import (
 type Member struct {
 	// gorm.Model
 	Id               int     `json:"id"`
-	No               string  `json:"no"`
+	No               *string `json:"no"`
 	ProfileImg       string  `json:"profile_img"`
 	FullName         string  `json:"full_name"`
-	KanaName         string  `json:"kana_name"`
-	Motto            string  `json:"motto"`
-	Biography        string  `json:"biography"`
-	StartDate        string  `json:"start_date"`
+	KanaName         *string `json:"kana_name"`
+	Motto            *string `json:"motto"`
+	Biography        *string `json:"biography"`
+	StartDate        *string `json:"start_date"`
 	EndDate          *string `json:"end_date"`
-	EmploymentStatus int     `json:"employment_status"`
-	Status           int     `json:"status"`
+	EmploymentStatus *int    `json:"employment_status"`
+	Status           *int    `json:"status"`
 }
 
 type Members struct {
@@ -45,32 +44,16 @@ func hello(c echo.Context) error {
 }
 
 func createMember(c echo.Context) error {
-	db := DBConnection()
-
-	no := c.FormValue("no")
-	profile_img := c.FormValue("profile_img")
-	full_name := c.FormValue("full_name")
-	kana_name := c.FormValue("kana_name")
-	motto := c.FormValue("motto")
-	biography := c.FormValue("biography")
-	start_date := c.FormValue("start_date")
-	employment_status, _ := strconv.Atoi(c.FormValue("employment_status"))
-	status, _ := strconv.Atoi(c.FormValue("status"))
-
-	var member = Member{
-		No:               no,
-		ProfileImg:       profile_img,
-		FullName:         full_name,
-		KanaName:         kana_name,
-		Motto:            motto,
-		Biography:        biography,
-		StartDate:        start_date,
-		EmploymentStatus: employment_status,
-		Status:           status,
+	var member Member
+	err := c.Bind(&member)
+	if err != nil {
+		return c.String(http.StatusBadRequest, "It's a bad request!")
 	}
+
+	db := DBConnection()
 	db.Create(&member)
 
-	return c.String(http.StatusOK, full_name)
+	return c.String(http.StatusOK, member.FullName+"さんの社員情報を登録しました")
 }
 
 func DBConnection() *gorm.DB {

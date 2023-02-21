@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
 	"os"
 
@@ -76,7 +75,6 @@ func updateMember(c echo.Context) error {
 	id := c.Param("id")
 	db := DBConnection()
 	db.First(&member, id)
-	fmt.Println(member)
 
 	// ID番号に応じたユーザーがDBから取得できているかの確認
 	if member.Id == 0 {

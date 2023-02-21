@@ -7,10 +7,10 @@ servers:
   - url: http://localhost:3030
     description: Dockerで構築したGoのサーバー
 paths:
-  /employee:
+  /member:
     post:
       tags:
-        - employee
+        - member
       summary: 社員を新規登録する
       description: 社員を新規登録できる
       parameters: []
@@ -20,7 +20,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Employee'
+              $ref: '#/components/schemas/Member'
             example:
               no: 11
               profile_img: https://emoshu.co.jp/files/blog/5/blog_posts/2023/02/00000016_eye_catch__thumb.jpg
@@ -37,7 +37,7 @@ paths:
           description: CREATED
 components:
   schemas:
-    Employee:
+    Member:
       title: 社員情報
       type: object
       properties:

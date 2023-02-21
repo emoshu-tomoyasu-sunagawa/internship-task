@@ -22,7 +22,7 @@ paths:
             schema:
               $ref: '#/components/schemas/Member'
             example:
-              no: 11
+              no: '011'
               profile_img: https://emoshu.co.jp/files/blog/5/blog_posts/2023/02/00000016_eye_catch__thumb.jpg
               full_name: John Doe
               kana_name: ジョン ドウ
@@ -43,7 +43,7 @@ components:
       properties:
         no:
           type: string
-          example: 21
+          example: '021'
         profile_img:
           type: string
           example: https://emoshu.co.jp/theme/emoshu/img/EMoshU_logo_m.png

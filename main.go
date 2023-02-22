@@ -1,8 +1,10 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 	"os"
+	"time"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -26,6 +28,10 @@ type (
 		Status           *int    `json:"status"`
 	}
 )
+
+func init() {
+	time.Local = time.FixedZone("JST", 9*60*60)
+}
 
 func main() {
 	router := NewRouter()
@@ -122,9 +128,11 @@ func DBConnection() *gorm.DB {
 
 	user := os.Getenv("MYSQL_USER")
 	password := os.Getenv("MYSQL_PASSWORD")
+	// host := os.Getenv("MYSQL_HOST")
 	container_name := os.Getenv("CONTAINER_NAME")
 	database := os.Getenv("MYSQL_DATABASE")
-	dsn := user + ":" + password + "@tcp(" + container_name + ")/" + database + "?charset=utf8mb4&parseTime=True&loc=Local"
+	dsn := user + ":" + password + "@tcp(" + container_name + ")/" + database
+	fmt.Println(dsn)
 
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {

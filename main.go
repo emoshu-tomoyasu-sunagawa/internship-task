@@ -13,24 +13,24 @@ import (
 
 type (
 	Member struct {
-		Id               int    `json:"id"`
-		No               string `json:"no"`
-		ProfileImg       string `json:"profile_img"`
-		FullName         string `json:"full_name"`
-		KanaName         string `json:"kana_name"`
-		Motto            string `json:"motto"`
-		Biography        string `json:"biography"`
-		StartDate        string `json:"start_date"`
-		EndDate          string `json:"end_date"`
-		EmploymentStatus int    `json:"employment_status"`
-		Status           int    `json:"status"`
+		Id               int     `json:"id"`
+		No               *string `json:"no"`
+		ProfileImg       string  `json:"profile_img"`
+		FullName         string  `json:"full_name"`
+		KanaName         *string `json:"kana_name"`
+		Motto            *string `json:"motto"`
+		Biography        *string `json:"biography"`
+		StartDate        *string `json:"start_date"`
+		EndDate          *string `json:"end_date"`
+		EmploymentStatus *int    `json:"employment_status"`
+		Status           *int    `json:"status"`
 	}
 )
 
 func main() {
 	e := echo.New()
 
-	e.GET("/", helloApi)                   // ルートディレクトリで確認する
+	e.GET("/hello", helloApi)              // ルートディレクトリで確認する
 	e.POST("/member", createMember)        // 社員の新規登録
 	e.GET("/members", getAllMembers)       // 社員の一覧取得
 	e.GET("/members/:id", getMember)       // 社員の詳細情報取得
@@ -54,7 +54,7 @@ func createMember(c echo.Context) error {
 	db := DBConnection()
 	db.Create(&member)
 
-	return c.String(http.StatusOK, member.FullName+"さんの社員情報を登録しました")
+	return c.JSON(http.StatusCreated, member)
 }
 
 // 社員の一覧取得

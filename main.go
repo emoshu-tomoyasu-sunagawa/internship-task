@@ -11,29 +11,36 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-type Member struct {
-	Id               int     `json:"id"`
-	No               *string `json:"no"`
-	ProfileImg       string  `json:"profile_img"`
-	FullName         string  `json:"full_name"`
-	KanaName         *string `json:"kana_name"`
-	Motto            *string `json:"motto"`
-	Biography        *string `json:"biography"`
-	StartDate        *string `json:"start_date"`
-	EndDate          *string `json:"end_date"`
-	EmploymentStatus *int    `json:"employment_status"`
-	Status           *int    `json:"status"`
-}
+type (
+	Member struct {
+		Id               int    `json:"id"`
+		No               string `json:"no"`
+		ProfileImg       string `json:"profile_img"`
+		FullName         string `json:"full_name"`
+		KanaName         string `json:"kana_name"`
+		Motto            string `json:"motto"`
+		Biography        string `json:"biography"`
+		StartDate        string `json:"start_date"`
+		EndDate          string `json:"end_date"`
+		EmploymentStatus int    `json:"employment_status"`
+		Status           int    `json:"status"`
+	}
+)
 
 func main() {
 	e := echo.New()
 
+	e.GET("/", helloApi)                   // ルートディレクトリで確認する
 	e.POST("/member", createMember)        // 社員の新規登録
 	e.GET("/members", getAllMembers)       // 社員の一覧取得
 	e.GET("/members/:id", getMember)       // 社員の詳細情報取得
 	e.PUT("/members/:id", updateMember)    // 社員の情報を更新する
 	e.DELETE("/members/:id", deleteMember) // 社員情報を削除する
 	e.Start(":3000")
+}
+
+func helloApi(c echo.Context) error {
+	return c.String(http.StatusOK, "Hello, API!")
 }
 
 // 社員の新規登録

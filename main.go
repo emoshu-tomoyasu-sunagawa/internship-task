@@ -28,6 +28,11 @@ type (
 )
 
 func main() {
+	router := NewRouter()
+	router.Logger.Fatal(router.Start(":3000"))
+}
+
+func NewRouter() *echo.Echo {
 	e := echo.New()
 
 	e.GET("/hello", helloApi)              // ルートディレクトリで確認する
@@ -36,7 +41,8 @@ func main() {
 	e.GET("/members/:id", getMember)       // 社員の詳細情報取得
 	e.PUT("/members/:id", updateMember)    // 社員の情報を更新する
 	e.DELETE("/members/:id", deleteMember) // 社員情報を削除する
-	e.Start(":3000")
+
+	return e
 }
 
 func helloApi(c echo.Context) error {

@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -26,11 +25,10 @@ func aTestCreateMember(t *testing.T) {
 }
 
 func TestHelloApi(t *testing.T) {
-	e := echo.New()
-	req := httptest.NewRequest(echo.GET, "http://localhost:3030/hello", nil)
-	fmt.Println(req)
+	router := NewRouter()
+	req := httptest.NewRequest(http.MethodGet, "/hello", nil)
 	rec := httptest.NewRecorder()
-	e.ServeHTTP(rec, req)
+	router.ServeHTTP(rec, req)
 
 	assert.Equal(t, http.StatusOK, rec.Code)
 	assert.Equal(t, "Hello, API!", rec.Body.String())

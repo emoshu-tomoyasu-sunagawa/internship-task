@@ -25,6 +25,11 @@ type Member struct {
 	Status           *int    `json:"status"`
 }
 
+type ErrorMessage struct {
+	Status  int    `json:"status"`
+	Message string `json:"message"`
+}
+
 func main() {
 	e := echo.New()
 
@@ -64,7 +69,11 @@ func getMember(c echo.Context) error {
 	var member Member
 	id := c.Param("id")
 	db := DBConnection()
-	db.First(&member, id)
+
+	if err := db.First(&member, id).Error; err != nil {
+		ErrorMessage := ErrorMessage{Status: 404, Message: "有効なID番号ではありません。"}
+		return c.JSON(http.StatusBadRequest, ErrorMessage)
+	}
 
 	return c.JSON(http.StatusOK, member)
 }

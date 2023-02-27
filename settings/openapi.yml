@@ -83,11 +83,11 @@ paths:
                 type: "object"
                 properties:
                   status:
-                    type: "string"
-                    example: "NOT_FOUND"
+                    type: "integer"
+                    example: 404
                   message:
                     type: "string"
-                    example: "NOT_FOUND"
+                    example: "有効なID番号ではありません。"
     put:
       tags:
         - member

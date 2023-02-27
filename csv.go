@@ -33,7 +33,7 @@ func main() {
 	check_nil(err)
 	defer rows.Close()
 
-	col := []string{"no", "profile_img", "full_name", "kana_name", "motto", "biographt", "start_date", "end_date", "employment_status", "status", "created_at", "updated_at"}
+	col := []string{"no", "profile_img", "full_name", "kana_name", "motto", "biographt", "start_date", "end_date", "employment_status", "status"}
 	cw.Write(col)
 
 	for rows.Next() {

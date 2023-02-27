@@ -13,21 +13,19 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-type (
-	Member struct {
-		Id               int     `json:"id"`
-		No               *string `json:"no"`
-		ProfileImg       string  `json:"profile_img"`
-		FullName         string  `json:"full_name"`
-		KanaName         *string `json:"kana_name"`
-		Motto            *string `json:"motto"`
-		Biography        *string `json:"biography"`
-		StartDate        *string `json:"start_date"`
-		EndDate          *string `json:"end_date"`
-		EmploymentStatus *int    `json:"employment_status"`
-		Status           *int    `json:"status"`
-	}
-)
+type Member struct {
+	Id               int     `json:"id"`
+	No               *string `json:"no"`
+	ProfileImg       string  `json:"profile_img"`
+	FullName         string  `json:"full_name"`
+	KanaName         *string `json:"kana_name"`
+	Motto            *string `json:"motto"`
+	Biography        *string `json:"biography"`
+	StartDate        *string `json:"start_date"`
+	EndDate          *string `json:"end_date"`
+	EmploymentStatus *int    `json:"employment_status"`
+	Status           *int    `json:"status"`
+}
 
 func init() {
 	time.Local = time.FixedZone("JST", 9*60*60)
@@ -60,6 +58,7 @@ func createMember(c echo.Context) error {
 	var member Member
 	err := c.Bind(&member)
 	if err != nil {
+		fmt.Println("aaaa")
 		return c.String(http.StatusBadRequest, "It's a bad request!")
 	}
 
@@ -128,15 +127,16 @@ func DBConnection() *gorm.DB {
 
 	user := os.Getenv("MYSQL_USER")
 	password := os.Getenv("MYSQL_PASSWORD")
-	// host := os.Getenv("MYSQL_HOST")
-	container_name := os.Getenv("CONTAINER_NAME")
 	database := os.Getenv("MYSQL_DATABASE")
+	container_name := os.Getenv("CONTAINER_NAME")
 	dsn := user + ":" + password + "@tcp(" + container_name + ")/" + database
+	// host := os.Getenv("MYSQL_HOST")
+	// dsn := user + ":" + password + "@tcp(" + host + ")/" + database
 	fmt.Println(dsn)
 
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
-		panic("Failed to connect DB")
+		fmt.Println(err.Error())
 	}
 
 	return db

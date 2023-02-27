@@ -33,6 +33,9 @@ func main() {
 	check_nil(err)
 	defer rows.Close()
 
+	col := []string{"no", "profile_img", "full_name", "kana_name", "motto", "biographt", "start_date", "end_date", "employment_status", "status", "created_at", "updated_at"}
+	cw.Write(col)
+
 	for rows.Next() {
 		err := rows.Scan(&id, &No, &ProfileImg, &FullName, &KanaName, &Motto, &Biography, &StartDate, &EndDate, &EmploymentStatus, &Status, &CreatedAt, &UpdatedAt)
 		check_nil(err)

@@ -16,14 +16,8 @@ func main() {
 
 	w := csv.NewWriter(os.Stdout)
 
-	// 1行ずつ出力している
-	for _, record := range records {
-		if err := w.Write(record); err != nil {
-			log.Fatalln("error writing record to csv: ", err)
-		}
-	}
-
-	w.Flush()
+	// まとめて出力する
+	w.WriteAll(records)
 
 	if err := w.Error(); err != nil {
 		log.Fatal(err)

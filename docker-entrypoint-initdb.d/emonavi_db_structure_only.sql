@@ -253,3 +253,44 @@ COMMIT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
+/*
+以下はマスタのレコード
+*/
+
+-- 部署名
+INSERT INTO departments (
+  department
+) VALUES
+  ('人事'),
+  ('開発'),
+  ('経理'),
+  ('営業')
+;
+
+-- 雇用形態
+INSERT INTO employment_status (
+  employment_status
+) VALUES
+  ('社員'),
+  ('業務委託'),
+  ('アルバイト')
+;
+
+-- ステータス
+INSERT INTO status (
+  status
+) VALUES
+  ("在職"),
+  ("休暇"),
+  ("退職")
+;
+
+-- 役職名・職種名
+INSERT INTO roles (
+  role
+) VALUES
+  ('社長'),
+  ('部長'),
+  ('社員')
+;

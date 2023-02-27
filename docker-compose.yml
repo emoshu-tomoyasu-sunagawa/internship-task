@@ -9,19 +9,40 @@ services:
     depends_on:
       - db
     command: ["./start.sh"]
+    networks:
+      - app-net
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_HOST: ${MYSQL_HOST}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
   db:
     image: mysql:8.0.21
     platform: linux/amd64
+    container_name: ${CONTAINER_NAME}
     ports:
       - '3306:3306'
     volumes:
       - go_mysql_data:/var/lib/mysql
       - ./docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
     environment:
-      MYSQL_USER: 'user'
-      MYSQL_PASSWORD: 'password'
-      MYSQL_ROOT_PASSWORD: 'password'
-      MYSQL_DATABAS: 'employees'
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       TZ: 'Asia/Tokyo'
+    networks:
+      - app-net
+  phpmyadmin:
+    image: phpmyadmin
+    restart: always
+    ports:
+      - 8080:80
+    environment:
+      - PMA_ARBITRARY=1
+    networks:
+      - app-net
 volumes:
   go_mysql_data:
+networks:
+  app-net:

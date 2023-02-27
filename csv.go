@@ -28,15 +28,15 @@ func main() {
 	defer cw.Flush()
 
 	var id int
-	var ProfileImg, FullName string
-	rows, err := db.Query("select id, profile_img, full_name from members;")
+	var No, ProfileImg, FullName, KanaName, Motto, Biography, StartDate, EndDate, EmploymentStatus, Status, CreatedAt, UpdatedAt string
+	rows, err := db.Query("select id, coalesce(no, '') as no, profile_img, full_name, coalesce(kana_name, '') as kana_name, coalesce(motto, '') as motto, coalesce(biography, '') as biography, coalesce(start_date, '') as start_date, coalesce(end_date, '') as end_date, coalesce(employment_status, '') as emplystatus, coalesce(status, '') as status, created_at, updated_at from members;")
 	check_nil(err)
 	defer rows.Close()
 
 	for rows.Next() {
-		err := rows.Scan(&id, &ProfileImg, &FullName)
+		err := rows.Scan(&id, &No, &ProfileImg, &FullName, &KanaName, &Motto, &Biography, &StartDate, &EndDate, &EmploymentStatus, &Status, &CreatedAt, &UpdatedAt)
 		check_nil(err)
-		col := []string{ProfileImg, FullName}
+		col := []string{No, ProfileImg, FullName, KanaName, Motto, Biography, StartDate, EndDate, EmploymentStatus, Status}
 		cw.Write(col)
 	}
 

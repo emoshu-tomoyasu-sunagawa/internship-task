@@ -1,32 +1,51 @@
 package main
 
 import (
+	"database/sql"
 	"encoding/csv"
-	"log"
+	"fmt"
 	"os"
+
+	_ "github.com/go-sql-driver/mysql"
 )
 
 func main() {
-	records := [][]string{
-		{"first_name", "last_name", "username"},
-		{"Rob", "Pike", "rob"},
-		{"Ken", "Thompson", "ken"},
-		{"Robert", "Griesemer", "gri"},
+	var db *sql.DB
+	var err error
+
+	db, err = sql.Open("mysql", fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", "user", "password", "localhost", "3306", "emonavi_db"))
+	check_nil(err)
+	defer db.Close()
+
+	err = db.Ping()
+	check_nil(err)
+
+	file, err := os.Create("members.csv")
+	check_nil(err)
+	defer file.Close()
+
+	cw := csv.NewWriter(file)
+	defer cw.Flush()
+
+	var id int
+	var ProfileImg, FullName string
+	rows, err := db.Query("select id, profile_img, full_name from members;")
+	check_nil(err)
+	defer rows.Close()
+
+	for rows.Next() {
+		err := rows.Scan(&id, &ProfileImg, &FullName)
+		check_nil(err)
+		col := []string{ProfileImg, FullName}
+		cw.Write(col)
 	}
 
-	w := csv.NewWriter(os.Stdout)
-	w.WriteAll(records)
+	err = rows.Err()
+	check_nil(err)
+}
 
-	if err := w.Error(); err != nil {
-		log.Fatalln("error writing csv: ", err)
-	}
-
-	file, err := os.Create("member_list.csv")
+func check_nil(err error) {
 	if err != nil {
 		panic(err)
 	}
-
-	defer file.Close()
-	cw := csv.NewWriter(file)
-	defer cw.Flush()
 }

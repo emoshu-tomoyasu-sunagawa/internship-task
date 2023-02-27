@@ -15,11 +15,18 @@ func main() {
 	}
 
 	w := csv.NewWriter(os.Stdout)
-
-	// まとめて出力する
 	w.WriteAll(records)
 
 	if err := w.Error(); err != nil {
-		log.Fatal(err)
+		log.Fatalln("error writing csv: ", err)
 	}
+
+	file, err := os.Create("member_list.csv")
+	if err != nil {
+		panic(err)
+	}
+
+	defer file.Close()
+	cw := csv.NewWriter(file)
+	defer cw.Flush()
 }

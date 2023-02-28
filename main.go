@@ -56,7 +56,7 @@ func createMember(c echo.Context) error {
 	}
 	db.Create(&member)
 
-	return c.String(http.StatusOK, member.FullName+"さんの社員情報を登録しました")
+	return c.JSON(http.StatusOK, member)
 }
 
 // 社員の一覧取得

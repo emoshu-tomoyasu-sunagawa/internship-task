@@ -35,7 +35,7 @@ func main() {
 
 	// e.POST("/member", createMember)        // 社員の新規登録
 	e.GET("/members", getAllMembers) // 社員の一覧取得
-	// e.GET("/members/:id", getMember)       // 社員の詳細情報取得
+	e.GET("/members/:id", getMember) // 社員の詳細情報取得
 	// e.PUT("/members/:id", updateMember)    // 社員の情報を更新する
 	// e.DELETE("/members/:id", deleteMember) // 社員情報を削除する
 	e.Start(":3000")
@@ -70,18 +70,22 @@ func getAllMembers(c echo.Context) error {
 }
 
 // 社員の詳細情報取得
-// func getMember(c echo.Context) error {
-// 	var member Member
-// 	id := c.Param("id")
-// 	db := DBConnection()
+func getMember(c echo.Context) error {
+	var member Member
+	id := c.Param("id")
+	db, err := DBConnection()
+	if err != nil {
+		ErrorMessage := ErrorMessage{Status: 500, Message: "DBとの接続に失敗しました。"}
+		return c.JSON(http.StatusOK, ErrorMessage)
+	}
 
-// 	if err := db.First(&member, id).Error; err != nil {
-// 		ErrorMessage := ErrorMessage{Status: 404, Message: "有効なID番号ではありません。"}
-// 		return c.JSON(http.StatusBadRequest, ErrorMessage)
-// 	}
+	if err = db.First(&member, id).Error; err != nil {
+		ErrorMessage := ErrorMessage{Status: 404, Message: "有効なID番号ではありません。"}
+		return c.JSON(http.StatusBadRequest, ErrorMessage)
+	}
 
-// 	return c.JSON(http.StatusOK, member)
-// }
+	return c.JSON(http.StatusOK, member)
+}
 
 // 社員の情報を更新する
 // func updateMember(c echo.Context) error {

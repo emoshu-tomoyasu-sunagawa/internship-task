@@ -95,7 +95,7 @@ func getMember(c echo.Context) error {
 
 	// 情報が取得できなかったらエラーを返す
 	if err = db.First(&member, id).Error; err != nil {
-		ErrorMessage := ErrorMessage{Status: 404, Message: "有効なID番号ではありません。"}
+		ErrorMessage := ErrorMessage{Status: 404, Message: "情報を取得できませんでした。"}
 		return c.JSON(http.StatusBadRequest, ErrorMessage)
 	}
 

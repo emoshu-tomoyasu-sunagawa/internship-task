@@ -75,19 +75,45 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Member'
-        404:
-          description: "Not Found"
+        400:
+          description: Parameter Not Integer
           content:
             application/json:
               schema:
-                type: "object"
+                type: object
                 properties:
                   status:
-                    type: "integer"
+                    type: integer
+                    example: 400
+                  message:
+                    type: string
+                    example: パラメータが数値ではありません。
+        404:
+          description: Member Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
                     example: 404
                   message:
-                    type: "string"
-                    example: "有効なID番号ではありません。"
+                    type: string
+                    example: 情報を取得できませんでした。
+        500:
+          description: Failed Connecting To Database
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 500
+                  message:
+                    type: string
+                    example: DBとの接続に失敗しました。
     put:
       tags:
         - member
@@ -214,7 +240,6 @@ components:
           type: integer
           example: 2
       required:
-        - no
         - profile_img
         - full_name
 tags:

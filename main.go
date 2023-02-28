@@ -33,7 +33,7 @@ type ErrorMessage struct {
 func main() {
 	e := echo.New()
 
-	// e.POST("/member", createMember)        // 社員の新規登録
+	e.POST("/member", createMember)  // 社員の新規登録
 	e.GET("/members", getAllMembers) // 社員の一覧取得
 	e.GET("/members/:id", getMember) // 社員の詳細情報取得
 	// e.PUT("/members/:id", updateMember)    // 社員の情報を更新する
@@ -42,18 +42,22 @@ func main() {
 }
 
 // 社員の新規登録
-// func createMember(c echo.Context) error {
-// 	var member Member
-// 	err := c.Bind(&member)
-// 	if err != nil {
-// 		return c.String(http.StatusBadRequest, "It's a bad request!")
-// 	}
+func createMember(c echo.Context) error {
+	var member Member
+	err := c.Bind(&member)
+	if err != nil {
+		return c.String(http.StatusBadRequest, "It's a bad request!")
+	}
 
-// 	db := DBConnection()
-// 	db.Create(&member)
+	db, err := DBConnection()
+	if err != nil {
+		ErrorMessage := ErrorMessage{Status: 500, Message: "DBとの接続に失敗しました。"}
+		return c.JSON(http.StatusOK, ErrorMessage)
+	}
+	db.Create(&member)
 
-// 	return c.String(http.StatusOK, member.FullName+"さんの社員情報を登録しました")
-// }
+	return c.String(http.StatusOK, member.FullName+"さんの社員情報を登録しました")
+}
 
 // 社員の一覧取得
 func getAllMembers(c echo.Context) error {

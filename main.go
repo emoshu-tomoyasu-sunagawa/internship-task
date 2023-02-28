@@ -3,6 +3,7 @@ package main
 import (
 	"net/http"
 	"os"
+	"strconv"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -76,13 +77,23 @@ func getAllMembers(c echo.Context) error {
 // 社員の詳細情報取得
 func getMember(c echo.Context) error {
 	var member Member
-	id := c.Param("id")
+	var id int
+
+	// 入力値のバリデーション
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		ErrorMessage := ErrorMessage{Status: 400, Message: "パラメータが数値ではありません。"}
+		return c.JSON(http.StatusOK, ErrorMessage)
+	}
+
+	// DB接続の確認
 	db, err := DBConnection()
 	if err != nil {
 		ErrorMessage := ErrorMessage{Status: 500, Message: "DBとの接続に失敗しました。"}
 		return c.JSON(http.StatusOK, ErrorMessage)
 	}
 
+	// 情報が取得できなかったらエラーを返す
 	if err = db.First(&member, id).Error; err != nil {
 		ErrorMessage := ErrorMessage{Status: 404, Message: "有効なID番号ではありません。"}
 		return c.JSON(http.StatusBadRequest, ErrorMessage)

@@ -1,0 +1,247 @@
+openapi: '3.0.0'
+info:
+  title: 社員API
+  version: '0.1.0'
+  description: 従業員をCRUDで登録したり更新したりできるAPI
+servers:
+  - url: http://localhost:3030
+    description: Dockerで構築したGoのサーバー
+paths:
+  /member:
+    post:
+      tags:
+        - member
+      summary: 社員を新規登録する
+      description: 社員を新規登録できる
+      parameters: []
+      requestBody:
+        description: 新規社員の初期データ
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Member'
+            example:
+              no: '011'
+              profile_img: https://emoshu.co.jp/files/blog/5/blog_posts/2023/02/00000016_eye_catch__thumb.jpg
+              full_name: John Doe
+              kana_name: ジョン ドウ
+              motto: 頑張るぞい！
+              biography: Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+              start_date: 2020-09-17 14:35:23
+              end_date: 2020-09-17 15:35:12
+              employment_status: 2
+              status: 2
+      responses:
+        '201':
+          description: CREATED
+  /members:
+    get:
+      tags:
+        - member
+      summary: 社員の一覧を取得する
+      responses:
+        '200':
+          description: FETCHED
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Member'
+                example:
+                  - id: 1
+                    profile_img: https://emoshu.co.jp
+                    full_name: Tomoyasu Sunagawa
+                  - id: 2
+                    no: '022'
+                    profile_img: htts://google.com
+                    full_name: John Doe
+                    motto: やーーー！
+                    start_date: 2021-10-07 16:13:21
+                    employment_status: 2
+  /members/{id}:
+    get:
+      tags:
+        - member
+      summary: 社員の詳細情報を取得する
+      description: 指定したID番号の社員の詳細情報を取得します
+      parameters:
+        - $ref: '#/components/parameters/MemberID'
+      responses:
+        200:
+          description: "Success"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Member'
+        400:
+          description: Parameter Not Integer
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 400
+                  message:
+                    type: string
+                    example: パラメータが数値ではありません。
+        404:
+          description: Member Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 404
+                  message:
+                    type: string
+                    example: 情報を取得できませんでした。
+        500:
+          description: Failed Connecting To Database
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 500
+                  message:
+                    type: string
+                    example: DBとの接続に失敗しました。
+    put:
+      tags:
+        - member
+      summary: 社員の情報を更新
+      description: フォームの情報を元に、社員の情報を更新します
+      parameters:
+        - $ref: '#/components/parameters/MemberID'
+      requestBody:
+        description: 新規社員の初期データ
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Member'
+            example:
+              no: '011'
+              profile_img: https://emoshu.co.jp/files/blog/5/blog_posts/2023/02/00000016_eye_catch__thumb.jpg
+              full_name: John Doe
+              kana_name: ジョン ドウ
+              motto: 頑張るぞい！
+              biography: Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+              start_date: 2020-09-17 14:35:23
+              end_date: 2020-09-17 15:35:12
+              employment_status: 2
+              status: 2
+      responses:
+        '200':
+          description: 更新された社員情報
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Member'
+        '404':
+          description: Failed
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  status:
+                    type: "string"
+                    example: "Failed Updating"
+                  message:
+                    type: "string"
+                    example: "Failed Updating"
+    delete:
+      tags:
+        - member
+      summary: 社員の削除
+      description: 社員情報を削除します
+      parameters:
+        - $ref: '#/components/parameters/MemberID'
+      responses:
+        200:
+          description: 削除された社員のID番号
+          content:
+            application/json:
+              schema:
+                type: object
+                description: 削除された社員のID番号
+                properties:
+                  id:
+                    type: integer
+                    description: 社員のID
+                    example: 1
+        404:
+          description: 削除に失敗した
+          content:
+            application/json:
+              schema:
+                type: object
+                description: 指定したID番号が存在しない
+                properties:
+                  id:
+                    type: integer
+                    description: 社員のID
+                    example: 0
+                  message:
+                    type: string
+                    description: 説明
+                    example: "Failed to delete member"
+components:
+  parameters:
+    MemberID:
+      name: id
+      in: path
+      description: 社員のID番号
+      required: true
+      schema:
+        type: integer
+  schemas:
+    Member:
+      title: 社員情報
+      type: object
+      properties:
+        no:
+          type: string
+          example: '021'
+        profile_img:
+          type: string
+          example: https://emoshu.co.jp/theme/emoshu/img/EMoshU_logo_m.png
+        full_name:
+          type: string
+          example: 砂川朝恭
+        kana_name:
+          type: string
+          example: スナガワトモヤス
+        motto:
+          type: string
+          example: ここにモットーを書くよ
+        biography:
+          type: string
+          example: ここには自己紹介文を書くよ！ここには自己紹介文を書くよ！ここには自己紹介文を書くよ！ここには自己紹介文を書くよ！
+        start_date:
+          type: string
+          example: '2020-12-12 12:45:12'
+        end_date:
+          type: string
+          example: '2021-01-12 16:45:12'
+        employment_status:
+          type: integer
+          example: 1
+        status:
+          type: integer
+          example: 2
+      required:
+        - profile_img
+        - full_name
+tags:
+  - name: member
+    description: 社員情報にアクセスする

@@ -1,27 +1,158 @@
 package main
 
 import (
-	"echo-gorm-crud-api-example/database"
-
 	"net/http"
+	"os"
+	"strconv"
 
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
+
+	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
 )
 
-func hello(c echo.Context) error {
-	database.Connect()
-	sqlDB, _ := database.DB.DB()
-	defer sqlDB.Close()
-	err := sqlDB.Ping()
-	if err != nil {
-		return c.String(http.StatusInternalServerError, "DBに接続できませんでした")
-	} else {
-		return c.String(http.StatusOK, "Hello, world!")
-	}
+type Member struct {
+	Id               int     `json:"id"`
+	No               *string `json:"no"`
+	ProfileImg       string  `json:"profile_img"`
+	FullName         string  `json:"full_name"`
+	KanaName         *string `json:"kana_name"`
+	Motto            *string `json:"motto"`
+	Biography        *string `json:"biography"`
+	StartDate        *string `json:"start_date"`
+	EndDate          *string `json:"end_date"`
+	EmploymentStatus *int    `json:"employment_status"`
+	Status           *int    `json:"status"`
+}
+
+type ErrorMessage struct {
+	Status  int    `json:"status"`
+	Message string `json:"message"`
 }
 
 func main() {
 	e := echo.New()
-	e.GET("/", hello)
-	e.Logger.Fatal(e.Start(":3000"))
+
+	e.POST("/member", createMember)  // 社員の新規登録
+	e.GET("/members", getAllMembers) // 社員の一覧取得
+	e.GET("/members/:id", getMember) // 社員の詳細情報取得
+	// e.PUT("/members/:id", updateMember)    // 社員の情報を更新する
+	// e.DELETE("/members/:id", deleteMember) // 社員情報を削除する
+	e.Start(":3000")
+}
+
+// 社員の新規登録
+func createMember(c echo.Context) error {
+	var member Member
+	err := c.Bind(&member)
+	if err != nil {
+		return c.String(http.StatusBadRequest, "It's a bad request!")
+	}
+
+	db, err := DBConnection()
+	if err != nil {
+		ErrorMessage := ErrorMessage{Status: 500, Message: "DBとの接続に失敗しました。"}
+		return c.JSON(http.StatusOK, ErrorMessage)
+	}
+	db.Create(&member)
+
+	return c.JSON(http.StatusOK, member)
+}
+
+// 社員の一覧取得
+func getAllMembers(c echo.Context) error {
+	var members []Member
+	db, err := DBConnection()
+
+	if err != nil {
+		ErrorMessage := ErrorMessage{Status: 500, Message: "DBとの接続に失敗しました。"}
+		return c.JSON(http.StatusOK, ErrorMessage)
+	}
+	db.Find(&members)
+
+	return c.JSON(http.StatusOK, members)
+}
+
+// 社員の詳細情報取得
+func getMember(c echo.Context) error {
+	var member Member
+	var id int
+
+	// 入力値のバリデーション
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		ErrorMessage := ErrorMessage{Status: 400, Message: "パラメータが数値ではありません。"}
+		return c.JSON(http.StatusOK, ErrorMessage)
+	}
+
+	// DB接続の確認
+	db, err := DBConnection()
+	if err != nil {
+		ErrorMessage := ErrorMessage{Status: 500, Message: "DBとの接続に失敗しました。"}
+		return c.JSON(http.StatusOK, ErrorMessage)
+	}
+
+	// 情報が取得できなかったらエラーを返す
+	if err = db.First(&member, id).Error; err != nil {
+		ErrorMessage := ErrorMessage{Status: 404, Message: "情報を取得できませんでした。"}
+		return c.JSON(http.StatusBadRequest, ErrorMessage)
+	}
+
+	return c.JSON(http.StatusOK, member)
+}
+
+// 社員の情報を更新する
+// func updateMember(c echo.Context) error {
+// 	var member Member
+// 	id := c.Param("id")
+// 	db := DBConnection()
+// 	db.First(&member, id)
+
+// 	// ID番号に応じたユーザーがDBから取得できているかの確認
+// 	if member.Id == 0 {
+// 		return c.JSON(http.StatusBadRequest, "There is NO user!")
+// 	}
+
+// 	if err := c.Bind(&member); err != nil {
+// 		return err
+// 	}
+
+// 	db.Save(&member)
+// 	return c.JSON(http.StatusOK, member)
+// }
+
+// 社員情報を削除する
+// func deleteMember(c echo.Context) error {
+// 	var member Member
+// 	id := c.Param("id")
+// 	db := DBConnection()
+// 	db.First(&member, id)
+
+// 	db.Delete(&Member{}, id)
+
+// 	return c.JSON(http.StatusOK, member.Id)
+// }
+
+func DBConnection() (db *gorm.DB, err error) {
+	err = godotenv.Load("./.env")
+	if err != nil {
+		panic("Error loading .env file")
+	}
+
+	user := os.Getenv("MYSQL_USER")
+	password := os.Getenv("MYSQL_PASSWORD")
+	container_name := os.Getenv("CONTAINER_NAME")
+	database := os.Getenv("MYSQL_DATABASE")
+	dsn := user + ":" + password + "@tcp(" + container_name + ")/" + database + "?charset=utf8mb4&parseTime=True&loc=Local"
+
+	return gorm.Open(mysql.Open(dsn), &gorm.Config{})
+
+	// // db = gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	// if err != nil {
+	// 	ErrorMessage := ErrorMessage{Status: 404, Message: "エラ〜"}
+	// 	return c.JSON(http.StatusOK, ErrorMessage)
+	// }
+
+	// return db
 }
